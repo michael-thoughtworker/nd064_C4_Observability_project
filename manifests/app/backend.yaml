@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: ligenchang/observability-backend:latest
+        image: ghcr.io/thejaysmith/backend:v1
         imagePullPolicy: Always
         ports:
         - containerPort: 8081
