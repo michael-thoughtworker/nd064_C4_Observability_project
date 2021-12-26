@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify
 
 import pymongo
 from flask_pymongo import PyMongo
+import json
 
 app = Flask(__name__)
 
@@ -34,6 +35,15 @@ def add_star():
     output = {"name": new_star["name"], "distance": new_star["distance"]}
     return jsonify({"result": output})
 
+@app.route('/metrics')
+def metrics():
+    response = app.response_class(
+        response=json.dumps({"status": "success", "code": 0, "data": {
+                            "db_connection_count": 100, "post_count": 400}}),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
 
 if __name__ == "__main__":
     app.run()
