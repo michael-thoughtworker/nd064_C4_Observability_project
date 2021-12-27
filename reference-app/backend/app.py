@@ -6,6 +6,8 @@ import json
 from prometheus_flask_exporter import PrometheusMetrics
 from jaeger_client import Config
 from flask_opentracing import FlaskTracing
+from os import getenv
+
 
 
 JAEGER_HOST = getenv('JAEGER_HOST', 'localhost')
@@ -54,6 +56,21 @@ def my_api():
 
     return jsonify(repsonse=answer)
 
+@app.route("/ap2")
+@tracing.trace()
+def my_api2():
+    answer = "something"
+    with jaeger_tracer.start_active_span(
+                        'python webserver internal span of log method') as scope:
+                    # Perform some computations to be traced.
+
+                    a = 1
+                    b = 2
+                    c = a + b
+
+                    scope.span.log_kv({'event': 'my computer knows math!', 'result': c})
+
+    return jsonify(repsonse=answer)
 
 @app.route("/star", methods=["POST"])
 def add_star():
