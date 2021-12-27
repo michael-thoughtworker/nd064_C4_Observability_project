@@ -3,8 +3,27 @@ from flask import Flask, render_template, request, jsonify
 import pymongo
 from flask_pymongo import PyMongo
 import json
+from prometheus_flask_exporter import PrometheusMetrics
+from jaeger_client import Config
+from flask_opentracing import FlaskTracing
+
+
+JAEGER_HOST = getenv('JAEGER_HOST', 'localhost')
 
 app = Flask(__name__)
+
+config = Config(config={'sampler': {'type': 'const', 'param': 1},
+                                'logging': True,
+                                'local_agent':
+                                # Also, provide a hostname of Jaeger instance to send traces to.
+                                {'reporting_host': "my-traces-query.observability.svc.cluster.local"}},
+                        # Service name can be arbitrary string describing this particular web service.
+                        service_name="backend")
+jaeger_tracer = config.initialize_tracer()
+tracing = FlaskTracing(jaeger_tracer)
+
+metrics = PrometheusMetrics(app)
+metrics.info('app_info', 'Application info', version='1.0.3')
 
 app.config["MONGO_DBNAME"] = "example-mongodb"
 app.config[
@@ -20,8 +39,19 @@ def homepage():
 
 
 @app.route("/api")
+@tracing.trace()
 def my_api():
     answer = "something"
+    with jaeger_tracer.start_active_span(
+                        'python webserver internal span of log method') as scope:
+                    # Perform some computations to be traced.
+
+                    a = 1
+                    b = 2
+                    c = a + b
+
+                    scope.span.log_kv({'event': 'my computer knows math!', 'result': c})
+
     return jsonify(repsonse=answer)
 
 
@@ -35,15 +65,6 @@ def add_star():
     output = {"name": new_star["name"], "distance": new_star["distance"]}
     return jsonify({"result": output})
 
-@app.route('/metrics')
-def metrics():
-    response = app.response_class(
-        response=json.dumps({"status": "success", "code": 0, "data": {
-                            "db_connection_count": 100, "post_count": 400}}),
-        status=200,
-        mimetype='application/json'
-    )
-    return response
 
 if __name__ == "__main__":
     app.run()
