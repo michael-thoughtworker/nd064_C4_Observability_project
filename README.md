@@ -2,52 +2,75 @@
 
 ## Verify the monitoring installation
 
-*TODO:* run `kubectl` command to show the running pods and services for all components. Take a screenshot of the output and include it here to verify the installation
+![pods and svc in monitoring](answer-img/pods_svc_monitoring.png)
+
 
 ## Setup the Jaeger and Prometheus source
-*TODO:* Expose Grafana to the internet and then setup Prometheus as a data source. Provide a screenshot of the home page after logging into Grafana.
+![grafana homepage](answer-img/grafana_homepage.png)
+
+![grafana datasources](answer-img/grafana_datasources.png)
+
 
 ## Create a Basic Dashboard
-*TODO:* Create a dashboard in Grafana that shows Prometheus as a source. Take a screenshot and include it here.
+![prometheus dashbaord](answer-img/prometheus_dashboard.png)
 
 ## Describe SLO/SLI
-*TODO:* Describe, in your own words, what the SLIs are, based on an SLO of *monthly uptime* and *request response time*.
+SLO is a goal to set by the team in order to evaluate the performance of the application.
+SLI is a specified metrics or indicator in the past time for the measurement of the application.
 
 ## Creating SLI metrics.
-*TODO:* It is important to know why we want to measure certain metrics for our customer. Describe in detail 5 metrics to measure these SLIs. 
+1. Max Latency of all requests
+2. App uptime
+3. Throughput
+4. Error rate
+5. Average Response time
 
 ## Create a Dashboard to measure our SLIs
-*TODO:* Create a dashboard to measure the uptime of the frontend and backend services We will also want to measure to measure 40x and 50x errors. Create a dashboard that show these values over a 24 hour period and take a screenshot.
+![error rate](answer-img/error_rate.png)
 
 ## Tracing our Flask App
-*TODO:*  We will create a Jaeger span to measure the processes on the backend. Once you fill in the span, provide a screenshot of it here. Also provide a (screenshot) sample Python file containing a trace and span code used to perform Jaeger traces on the backend service.
+![error rate](answer-img/jaeger_backend.png)
+
+![jaeger_backend_code](answer-img/jaeger_backend_trace_code.png)
 
 ## Jaeger in Dashboards
-*TODO:* Now that the trace is running, let's add the metric to our current Grafana dashboard. Once this is completed, provide a screenshot of it here.
+![jaeger grafana dashboard](answer-img/jaeger_grafana_dashboard.png)
 
 ## Report Error
-*TODO:* Using the template below, write a trouble ticket for the developers, to explain the errors that you are seeing (400, 500, latency) and to let them know the file that is causing the issue also include a screenshot of the tracer span to demonstrate how we can user a tracer to locate errors easily.
+Using the template below, write a trouble ticket for the developers, to explain the errors that you are seeing (400, 500, latency) and to let them know the file that is causing the issue also include a screenshot of the tracer span to demonstrate how we can user a tracer to locate errors easily.
 
 TROUBLE TICKET
 
-Name:
+Name: Json decode error occured in get-python-jobs of trial app
 
-Date:
+Date: 2022 Jan 01
 
-Subject:
+Subject: Json decode error occured in get-python-jobs of trial app
 
-Affected Area:
+Affected Area: Trial App
 
-Severity:
+Severity: High
 
-Description:
+Description: When make a call to trace  api of trial app, curl http://10.0.2.15:8082/trace,  one Json Decode Error happens and please see below screenshot for details.
+
+Screenshot: ![trouble ticket](answer-img/trouble ticket.png)
+
 
 
 ## Creating SLIs and SLOs
-*TODO:* We want to create an SLO guaranteeing that our application has a 99.95% uptime per month. Name four SLIs that you would use to measure the success of this SLO.
+We want to create an SLO guaranteeing that our application has a 99.95% uptime per month. Name four SLIs that you would use to measure the success of this SLO.
+1. Errors per seconds
+2. Requests per seconds
+3. Requests  duration
+4. Average response time
+
 
 ## Building KPIs for our plan
-*TODO*: Now that we have our SLIs and SLOs, create a list of 2-3 KPIs to accurately measure these metrics as well as a description of why those KPIs were chosen. We will make a dashboard for this, but first write them down here.
+Now that we have our SLIs and SLOs, create a list of 2-3 KPIs to accurately measure these metrics as well as a description of why those KPIs were chosen. We will make a dashboard for this, but first write them down here.
+1. We need to measure errors per seconds to view how many request errors are there based on the timeline
+2. We need to measure how is  the requests rate per seconds so that we can compare with the error per seconds graph to view it
+3. We need to see the requests duration includes the min request latency and max request latency as the uptime means the request should not exceed certain threshold
+4. We need to see avg response time to understand more on the application performance 
 
 ## Final Dashboard
-*TODO*: Create a Dashboard containing graphs that capture all the metrics of your KPIs and adequately representing your SLIs and SLOs. Include a screenshot of the dashboard here, and write a text description of what graphs are represented in the dashboard.  
+![final dashboard](answer-img/final_dashboard.png)

@@ -32,6 +32,10 @@ def init_tracer(service):
             "sampler": {"type": "const", "param": 1},
             "logging": True,
             "reporter_batch_size": 1,
+            'local_agent': {
+                'reporting_host': 'hotrod-agent.observability.svc.cluster.local',
+                'reporting_port': '6831',
+            },
         },
         service_name=service,
         validate=True,
